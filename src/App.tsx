@@ -4,18 +4,19 @@ import { ka } from './i18n/ka';
 import { es } from './i18n/es';
 import { Language } from './types';
 import { THEME } from './constants/theme';
-import { MORSE_MAP, textToMorse } from './utils/morse';
+import { MORSE_MAP, textToMorse, playMorseSound } from './utils/morse';
 import MorseInput from './components/MorseInput';
 import PredictionDisplay from './components/PredictionDisplay';
 import Translator from './components/Translator';
 import Glossary from './components/Glossary';
+import PracticeMode from './components/PracticeMode';
 import Cheatsheet from './components/Cheatsheet';
 import InstructionsModal from './components/InstructionsModal';
-import { BookOpen, Languages, Radio, Info, Eraser, Delete, BookMarked, HelpCircle } from 'lucide-react';
+import { BookOpen, Languages, Radio, Info, Eraser, Delete, BookMarked, HelpCircle, Target, Volume2 } from 'lucide-react';
 
 export default function App() {
   const [lang, setLang] = useState<Language>('ka');
-  const [mode, setMode] = useState<'learning' | 'translator' | 'glossary'>('learning');
+  const [mode, setMode] = useState<'learning' | 'practice' | 'translator' | 'glossary'>('learning');
   const [morseBuffer, setMorseBuffer] = useState('');
   const [decodedText, setDecodedText] = useState('');
   const [showCheatsheet, setShowCheatsheet] = useState(false);
@@ -69,34 +70,54 @@ export default function App() {
       {/* Header */}
       <header className="px-4 py-3 border-b border-surface-light flex items-center justify-between shrink-0 bg-surface/90 backdrop-blur z-50">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-md bg-primary flex items-center justify-center text-background font-black shadow-[0_0_15px_rgba(255,215,0,0.3)]">
-             M
-          </div>
+          <img 
+            src="https://i.postimg.cc/9fG99S6Y/App-icon-Morse.png" 
+            alt="Logo" 
+            className="w-8 h-8 rounded-md shadow-[0_0_15px_rgba(255,215,0,0.3)] object-cover"
+          />
           <div className="hidden xs:block">
             <h1 className="text-xs font-black leading-none uppercase tracking-tighter">{translations.title}</h1>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          {mode === 'learning' && (
-            <div className="flex bg-surface-light p-1 rounded-md border border-white/5 h-8 items-center">
-              <button 
-                onClick={() => setShowInstructions(true)}
-                className="h-full px-3 rounded-md text-[10px] font-black transition-all bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 flex items-center justify-center min-w-[28px]"
-                title={translations.instructionTitle}
-              >
-                !
-              </button>
-              <div className="w-[1px] h-3 bg-white/10 mx-1" />
-              <button 
-                onClick={() => setShowCheatsheet(true)}
-                className="h-full px-2 rounded-md text-[10px] font-black transition-all text-text-secondary hover:text-primary flex items-center justify-center"
-                title={translations.cheatsheet}
-              >
-                <BookOpen size={14} />
-              </button>
-            </div>
-          )}
+          <div className="flex bg-surface-light p-1 rounded-md border border-white/5 h-8 items-center">
+            {mode === 'learning' && (
+              <>
+                <button 
+                  onClick={() => setShowInstructions(true)}
+                  className="h-full px-3 rounded-md text-[10px] font-black transition-all bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 flex items-center justify-center min-w-[28px]"
+                  title={translations.instructionTitle}
+                >
+                  !
+                </button>
+                <div className="w-[1px] h-3 bg-white/10 mx-1" />
+              </>
+            )}
+            <button 
+              onClick={() => setShowCheatsheet(true)}
+              className="h-full px-2 rounded-md text-[10px] font-black transition-all text-text-secondary hover:text-primary flex items-center justify-center"
+              title={translations.cheatsheet}
+            >
+              <BookOpen size={14} />
+            </button>
+            <div className="w-[1px] h-3 bg-white/10 mx-1" />
+            <button 
+              onClick={() => setMode('translator')}
+              className={`h-full px-2 rounded-md text-[10px] font-black transition-all flex items-center justify-center ${mode === 'translator' ? 'text-primary' : 'text-text-secondary hover:text-primary'}`}
+              title={translations.translatorMode}
+            >
+              <Languages size={14} />
+            </button>
+            <div className="w-[1px] h-3 bg-white/10 mx-1" />
+            <button 
+              onClick={() => setMode('glossary')}
+              className={`h-full px-2 rounded-md text-[10px] font-black transition-all flex items-center justify-center ${mode === 'glossary' ? 'text-primary' : 'text-text-secondary hover:text-primary'}`}
+              title={translations.glossaryMode}
+            >
+              <BookMarked size={14} />
+            </button>
+          </div>
 
           <div className="flex bg-surface-light p-1 rounded-md border border-white/5 h-8 items-center">
             <button 
@@ -130,13 +151,6 @@ export default function App() {
         >
           <Languages size={16} />
           <span className="font-bold text-[9px] uppercase tracking-widest">{translations.translatorMode}</span>
-        </button>
-        <button
-          onClick={() => setMode('glossary')}
-          className={`flex-1 flex items-center justify-center gap-2 py-3 border-b-2 transition-all ${mode === 'glossary' ? 'border-primary text-primary bg-primary/5' : 'border-transparent text-text-secondary'}`}
-        >
-          <BookMarked size={16} />
-          <span className="font-bold text-[9px] uppercase tracking-widest">{translations.glossaryMode}</span>
         </button>
       </nav>
 
@@ -190,19 +204,30 @@ export default function App() {
               </div>
 
               {/* BOTTOM: Output Area */}
-              <div className="bg-surface-light p-3 rounded-lg border border-white/5 h-28 flex flex-col shrink-0 relative shadow-2xl overflow-hidden">
+              <div className="bg-surface-light p-3 rounded-lg border border-white/5 min-h-[110px] flex flex-col shrink-0 relative shadow-2xl overflow-hidden">
                 <div className="flex justify-between items-center mb-1 relative z-10">
                   <span className="text-[8px] font-black text-text-secondary uppercase tracking-[2px]">
                     {lang === 'ka' ? 'ტექსტი' : 'Texto'}
                   </span>
-                  {decodedText && (
-                    <button 
-                      onClick={handleClearDecoded}
-                      className="text-secondary p-1"
-                    >
-                      <Eraser size={14} />
-                    </button>
-                  )}
+                  <div className="flex gap-2 relative z-20">
+                    {decodedText && (
+                      <button 
+                        onClick={() => playMorseSound(textToMorse(decodedText))}
+                        className="p-1 rounded bg-black/20 text-text-secondary hover:text-primary transition-colors"
+                        title={translations.play}
+                      >
+                        <Volume2 size={14} />
+                      </button>
+                    )}
+                    {decodedText && (
+                      <button 
+                        onClick={handleClearDecoded}
+                        className="p-1 rounded bg-black/20 text-text-secondary hover:text-primary transition-colors"
+                      >
+                        <Eraser size={14} />
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <div className="flex-1 flex flex-col items-center justify-center bg-black/20 rounded-md border border-white/5 relative z-10 overflow-hidden">
                   <div className="text-3xl font-mono font-black text-primary overflow-x-auto whitespace-nowrap px-4 scrollbar-hide py-1">
@@ -215,6 +240,25 @@ export default function App() {
                   )}
                 </div>
               </div>
+
+              {/* PRACTICE BUTTON */}
+              <button
+                onClick={() => setMode('practice')}
+                className="w-full py-4 bg-primary text-background rounded-xl font-black uppercase tracking-[4px] shadow-lg shadow-primary/20 active:scale-95 transition-all flex items-center justify-center gap-3 shrink-0"
+              >
+                <Target size={20} />
+                {translations.practiceMode}
+              </button>
+            </motion.div>
+          ) : mode === 'practice' ? (
+            <motion.div
+              key="practice"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="h-full flex flex-col overflow-hidden"
+            >
+              <PracticeMode translations={translations} lang={lang} onBack={() => setMode('learning')} />
             </motion.div>
           ) : mode === 'translator' ? (
             <motion.div
@@ -222,7 +266,7 @@ export default function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="h-full p-4 flex items-center justify-center overflow-y-auto"
+              className="h-full p-4 flex flex-col overflow-hidden"
             >
               <Translator translations={translations} lang={lang} />
             </motion.div>
@@ -232,7 +276,7 @@ export default function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="h-full p-4 flex items-center justify-start flex-col overflow-y-auto"
+              className="h-full p-4 flex flex-col overflow-hidden"
             >
               <Glossary translations={translations} lang={lang} />
             </motion.div>

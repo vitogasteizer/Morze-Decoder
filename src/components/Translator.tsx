@@ -14,18 +14,21 @@ export default function Translator({ translations, lang }: TranslatorProps) {
   const [outputText, setOutputText] = useState('');
   const [isTextToMorse, setIsTextToMorse] = useState(true);
 
-  const handleConvert = () => {
+  const handleConvert = (text: string) => {
+    setInputText(text);
     if (isTextToMorse) {
-      setOutputText(textToMorse(inputText));
+      setOutputText(textToMorse(text));
     } else {
-      setOutputText(morseToText(inputText, lang));
+      setOutputText(morseToText(text, lang));
     }
   };
 
   const handleSwap = () => {
     setIsTextToMorse(!isTextToMorse);
-    setInputText(outputText);
-    setOutputText(inputText);
+    const newIn = outputText;
+    const newOut = inputText;
+    setInputText(newIn);
+    setOutputText(newOut);
   };
 
   const handleCopy = () => {
@@ -38,8 +41,9 @@ export default function Translator({ translations, lang }: TranslatorProps) {
   };
 
   return (
-    <div className="flex flex-col gap-4 w-full max-w-xl mx-auto p-4 sm:p-6 bg-surface-light rounded-lg border border-white/5 shadow-2xl">
-      <div className="flex items-center justify-between">
+    <div className="flex flex-col gap-4 w-full h-full max-w-xl mx-auto overflow-hidden">
+      {/* Header Info */}
+      <div className="flex items-center justify-between px-2 shrink-0">
         <div className="flex flex-col">
           <span className="text-[8px] font-bold text-text-secondary uppercase tracking-[2px]">Source</span>
           <h3 className="text-xs font-black text-primary uppercase">
@@ -49,7 +53,7 @@ export default function Translator({ translations, lang }: TranslatorProps) {
         
         <button 
           onClick={handleSwap}
-          className="w-10 h-10 rounded-full bg-surface border border-white/5 flex items-center justify-center text-primary hover:scale-110 active:scale-95 transition-all shadow-lg"
+          className="w-10 h-10 rounded-full bg-surface border border-white/10 flex items-center justify-center text-primary hover:scale-110 active:scale-95 transition-all shadow-lg"
         >
           <ArrowRightLeft size={16} />
         </button>
@@ -62,42 +66,47 @@ export default function Translator({ translations, lang }: TranslatorProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4">
-        <div className="flex flex-col gap-1.5">
-           <textarea
-             value={inputText}
-             onChange={(e) => setInputText(e.target.value)}
-             placeholder={translations.inputPlaceholder}
-             className="w-full h-24 p-4 bg-black/40 rounded-lg border border-white/5 text-text-primary font-mono focus:border-primary outline-none resize-none transition-all text-sm shadow-inner"
-           />
+      {/* Inputs List */}
+      <div className="flex-1 min-h-0 flex flex-col gap-4 overflow-hidden">
+        {/* Input Card */}
+        <div className="flex-[3] flex flex-col bg-surface-light rounded-2xl border border-white/5 shadow-2xl relative overflow-hidden">
+          <div className="p-2 border-b border-white/5 bg-black/20 shrink-0">
+            <span className="text-[8px] font-black text-text-secondary uppercase tracking-[2px]">Input Area</span>
+          </div>
+          <textarea
+            value={inputText}
+            onChange={(e) => handleConvert(e.target.value)}
+            placeholder={translations.inputPlaceholder}
+            className="flex-1 w-full p-4 bg-transparent text-text-primary font-mono focus:text-primary outline-none resize-none transition-all text-lg shadow-inner custom-scrollbar"
+          />
         </div>
 
-        <div className="flex flex-col gap-1.5 relative group">
-           <div className="w-full h-24 p-4 bg-black/60 rounded-lg border border-white/5 text-primary font-mono overflow-auto break-all text-sm shadow-inner">
-             {outputText || <span className="opacity-10 italic text-[10px]">{translations.outputPlaceholder}</span>}
-           </div>
-           
-           <div className="absolute top-2 right-2 flex gap-1.5">
-             {outputText && (
-               <>
-                 <button onClick={handleCopy} className="p-1.5 bg-surface rounded-md text-text-secondary hover:text-primary transition-colors border border-white/5">
-                   <Copy size={12} />
-                 </button>
-                 <button onClick={handlePlay} className="p-1.5 bg-surface rounded-md text-text-secondary hover:text-primary transition-colors border border-white/5">
-                   <Volume2 size={12} />
-                 </button>
-               </>
-             )}
-           </div>
+        {/* Output Card */}
+        <div className="flex-[4] flex flex-col bg-surface-light rounded-2xl border border-white/5 shadow-2xl relative overflow-hidden">
+          <div className="p-2 border-b border-white/5 bg-black/20 flex justify-between items-center shrink-0">
+            <span className="text-[8px] font-black text-text-secondary uppercase tracking-[2px]">Translation</span>
+            <div className="flex gap-1.5">
+              {outputText && (
+                <>
+                  <button onClick={handleCopy} className="p-1.5 bg-surface-light border border-white/10 rounded-md text-text-secondary hover:text-primary transition-colors">
+                    <Copy size={12} />
+                  </button>
+                  <button onClick={handlePlay} className="p-1.5 bg-surface-light border border-white/10 rounded-md text-text-secondary hover:text-primary transition-colors">
+                    <Volume2 size={12} />
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+          <div className="flex-1 w-full p-4 bg-black/20 text-primary font-mono overflow-y-auto break-all text-xl shadow-inner custom-scrollbar leading-relaxed">
+            {outputText || (
+              <span className="opacity-10 italic text-sm tracking-widest font-sans uppercase flex h-full items-center justify-center">
+                {translations.outputPlaceholder}
+              </span>
+            )}
+          </div>
         </div>
       </div>
-
-      <button
-        onClick={handleConvert}
-        className="w-full py-4 bg-primary text-background font-black rounded-lg hover:brightness-110 active:scale-[0.98] transition-all shadow-lg text-sm uppercase tracking-[2px]"
-      >
-        {isTextToMorse ? translations.convertToMorse : translations.convertToText}
-      </button>
     </div>
   );
 }

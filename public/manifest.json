@@ -1,6 +1,6 @@
 {
-  "name": "Marconi Morse",
-  "short_name": "Marconi",
+  "name": "Morse by avma",
+  "short_name": "Morse",
   "description": "Learn and Transmit Morse Code",
   "start_url": "/",
   "display": "standalone",
@@ -8,7 +8,7 @@
   "theme_color": "#ffd700",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+      "src": "https://i.postimg.cc/9fG99S6Y/App-icon-Morse.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

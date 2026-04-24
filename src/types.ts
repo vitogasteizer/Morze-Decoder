@@ -10,10 +10,20 @@ export interface Translations {
   copy: string;
   play: string;
   learningMode: string;
+  practiceMode: string;
   translatorMode: string;
   glossaryMode: string;
   cheatsheet: string;
   close: string;
+  practice: {
+    repeat: string;
+    skip: string;
+    submit: string;
+    correct: string;
+    incorrect: string;
+    next: string;
+    practiceTitle: string;
+  };
   instructions: {
     dot: string;
     dash: string;

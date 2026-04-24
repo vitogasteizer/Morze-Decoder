@@ -1,11 +1,37 @@
-<div align="center">
+# Marconi - Morse Code Learning & Translation App
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+A professional, high-fidelity Morse code learning tool with real-time detection, translation, and glossary.
 
-  <h1>Built with AI Studio</h2>
+## Deployment to Vercel via GitHub
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+1. **Push to GitHub**:
+   - Create a new repository on GitHub.
+   - Initialize git in your local project: `git init`.
+   - Add files: `git add .`.
+   - Commit: `git commit -m "Initial commit"`.
+   - Connect to GitHub: `git remote add origin YOUR_REPO_URL`.
+   - Push: `git push -u origin main`.
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+2. **Deploy on Vercel**:
+   - Go to [Vercel](https://vercel.com).
+   - Click "New Project".
+   - Import your GitHub repository.
+   - Vercel will automatically detect the Vite setup.
+   - Click "Deploy".
 
-</div>
+## Features
+
+- **Learning Mode**: High-speed Morse detection algorithm (tuned at 160ms).
+- **Translator**: Bi-directional translation (Latin/Georgian <-> Morse).
+- **Glossary**: Common Morse abbreviations with audio playback.
+- **Multi-language**: Support for Georgian (KA) and Spanish (ES).
+- **Audio Feedback**: Realistic oscillator sound with smooth volume envelopes.
+
+## Tech Stack
+
+- React 18
+- Vite
+- Tailwind CSS
+- Motion (for animations)
+- Lucide React (icons)
+- Web Audio API

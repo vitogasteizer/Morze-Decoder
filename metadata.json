@@ -1,0 +1,6 @@
+{
+  "name": "Morse Device App",
+  "description": "A minimalist Morse code device for learning and translating, with real-time visual tree representation and audio feedback.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

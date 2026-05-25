@@ -1,6 +1,6 @@
 {
-  "name": "Morse Device App",
-  "description": "A minimalist Morse code device for learning and translating, with real-time visual tree representation and audio feedback.",
+  "name": "Morse by avma",
+  "description": "Learn and practice Morse code with interactive trainer, real-time audio synthesis, and an advanced bilingual Georgian/Latin translator.",
   "requestFramePermissions": [],
   "majorCapabilities": []
 }

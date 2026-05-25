@@ -1,17 +1,61 @@
 {
   "name": "Morse by avma",
-  "short_name": "Morse",
-  "description": "Learn and Transmit Morse Code",
+  "short_name": "Morse by avma",
+  "description": "Learn and practice Morse code with interactive trainer, real-time audio synthesis, and an advanced bilingual Georgian/Latin translator.",
   "start_url": "/",
+  "scope": "/",
+  "lang": "ka",
+  "dir": "ltr",
+  "id": "/?source=pwa",
+  "orientation": "portrait",
+  "categories": [
+    "education",
+    "utilities",
+    "entertainment"
+  ],
   "display": "standalone",
-  "background_color": "#0a0a0a",
+  "background_color": "#121214",
   "theme_color": "#ffd700",
   "icons": [
+    {
+      "src": "https://i.postimg.cc/9fG99S6Y/App-icon-Morse.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
     {
       "src": "https://i.postimg.cc/9fG99S6Y/App-icon-Morse.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "სწავლება (Learning)",
+      "url": "/",
+      "description": "Start learning Morse code"
+    },
+    {
+      "name": "თარჯიმანი (Translator)",
+      "url": "/?mode=translator",
+      "description": "Translate text to Morse and back"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://i.postimg.cc/85zstSmb/wide-screen-morse.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Marconi Morse Code Interactive Translator and Instructor Landscape View"
+    },
+    {
+      "src": "https://i.postimg.cc/j5GThpS8/narrow-screen-morse.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Marconi Morse Code Practice Interactive Interface Portrait View"
     }
   ]
 }
